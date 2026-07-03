@@ -2,26 +2,20 @@ import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 
 
 type Direction = "up" | "left" | "right" | "fade";
 
-/**
- * Scroll-triggered entrance animation, mimicking Elementor's "fadeInUp" style.
- * Wrap any block to have it fade/slide in when it enters the viewport.
- */
 export function Reveal({
   children,
   direction = "up",
   delay = 0,
   duration = 900,
   className = "",
-  as: As = "div",
 }: {
   children: ReactNode;
   direction?: Direction;
   delay?: number;
   duration?: number;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
 }) {
-  const ref = useRef<HTMLElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
