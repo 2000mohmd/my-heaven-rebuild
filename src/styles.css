@@ -8,6 +8,15 @@
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 
+/* Mattone — drop the woff2 files into public/fonts/ to activate. Falls back to Fraunces until then. */
+@font-face {
+  font-family: "Mattone";
+  font-weight: 300 700;
+  font-display: swap;
+  src: local("Mattone"),
+       url("/fonts/Mattone.woff2") format("woff2");
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -40,6 +49,7 @@
   --color-cloud: var(--cloud);
   --color-ink: var(--ink);
   --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-mattone: "Mattone", "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
