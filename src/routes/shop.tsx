@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { getProducts, getCategories, type WCProduct } from "@/lib/woocommerce.functions";
+import { getProducts, getCategories } from "@/lib/woocommerce.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { ProductCard } from "@/components/product-card";
 
 const searchSchema = z.object({
   category: z.string().optional(),
@@ -122,19 +123,3 @@ function FilterChip({
   );
 }
 
-function ProductCard({ product }: { product: WCProduct }) {
-  const img = product.images[0]?.src;
-  return (
-    <Link to="/shop/$slug" params={{ slug: product.slug }} className="group block">
-      <div className="aspect-square overflow-hidden rounded-2xl bg-blush/50">
-        {img && (
-          <img src={img} alt={product.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-        )}
-      </div>
-      <div className="mt-3">
-        <h3 className="text-sm font-medium text-foreground">{product.name}</h3>
-        <p className="mt-0.5 text-sm font-semibold text-primary">${Number(product.price).toFixed(2)}</p>
-      </div>
-    </Link>
-  );
-}
