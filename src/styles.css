@@ -49,6 +49,7 @@
   --color-cloud: var(--cloud);
   --color-ink: var(--ink);
   --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-mattone: "Mattone", "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
