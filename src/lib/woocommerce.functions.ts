@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/woocommerce";
 
-async function wc(path: string) {
+async function wc(path: string, init?: { method?: string; body?: string }) {
   const lovableKey = process.env.LOVABLE_API_KEY;
   const wcKey = process.env.WOOCOMMERCE_API_KEY;
   if (!lovableKey || !wcKey) {
@@ -23,10 +23,6 @@ async function wc(path: string) {
     throw new Error(`WooCommerce error [${res.status}]: ${body.slice(0, 300)}`);
   }
   return res.json();
-}
-
-async function wc(path: string) {
-  return wcRequest(path);
 }
 
 export type WCImage = { id: number; src: string; alt: string };
