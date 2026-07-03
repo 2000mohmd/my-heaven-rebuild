@@ -47,9 +47,11 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-blush: var(--blush);
+  --color-cream: var(--cream);
+  --color-starry: var(--starry);
   --color-cloud: var(--cloud);
   --color-ink: var(--ink);
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-display: "Mattone", "Fraunces", ui-serif, Georgia, serif;
   --font-mattone: "Mattone", "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
