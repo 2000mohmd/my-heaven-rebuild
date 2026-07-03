@@ -77,20 +77,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Heaven Beauty — Where Tint Meets Radiance" },
+      {
+        name: "description",
+        content:
+          "Heaven Beauty crafts soft, radiant tints and blushes to enhance your natural glow. Shop Heavenly Tint, Sparkly Tint and Devotion.",
+      },
+      { name: "author", content: "Heaven Beauty" },
+      { property: "og:title", content: "Heaven Beauty — Where Tint Meets Radiance" },
+      {
+        property: "og:description",
+        content: "Soft, radiant tints designed to enhance your natural glow.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
