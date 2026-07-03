@@ -1,12 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { getProducts, getCategories, type WCProduct } from "@/lib/woocommerce.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-const HERO_IMG =
-  "https://myheavenbeauty.com/wp-content/uploads/2026/04/IMG_2385.JPG-scaled.jpeg";
+// Slides from Elementor export (elementor-988624)
+const SLIDES = [
+  {
+    img: "https://myheavenbeauty.com/wp-content/uploads/2026/04/IMG_2385.JPG-scaled.jpeg",
+    caption: "Effortless Glow",
+    cta: { label: "Shop All", to: "/shop" as const },
+  },
+  {
+    img: "https://myheavenbeauty.com/wp-content/uploads/2026/04/IMG_2386.JPG-scaled.jpeg",
+    caption: "",
+    cta: null,
+  },
+  {
+    img: "https://myheavenbeauty.com/wp-content/uploads/2026/06/IMG_5185.JPG-1-1-1-1-1-1-1-scaled.webp",
+    caption: "",
+    cta: null,
+  },
+];
 
 const productsQO = () =>
   queryOptions({
@@ -43,57 +60,8 @@ function HomePage() {
   return (
     <div className="min-h-screen">
       <SiteHeader />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-blush">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 md:grid-cols-2 md:px-8 md:py-24">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1.5 text-xs font-medium uppercase tracking-widest text-primary">
-              <Sparkles className="h-3.5 w-3.5" /> New Collection
-            </span>
-            <h1 className="mt-6 font-display text-5xl leading-[1.05] tracking-tight md:text-7xl">
-              Effortless<br />Glow.
-            </h1>
-            <p className="mt-6 max-w-md text-lg text-muted-foreground">
-              A touch of color designed to enhance your natural glow — soft,
-              radiant, and effortlessly you.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to="/shop"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
-              >
-                Shop all <ArrowRight className="h-4 w-4" />
-              </Link>
-              <a
-                href="#tints"
-                className="inline-flex items-center rounded-full border border-foreground/20 px-7 py-3 text-sm font-medium text-foreground hover:bg-white/60"
-              >
-                Explore tints
-              </a>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute -inset-4 rounded-[2.5rem] bg-white/40 blur-2xl" aria-hidden />
-            <img
-              src={HERO_IMG}
-              alt="Heaven Beauty model with a soft pink glow"
-              className="relative aspect-[4/5] w-full rounded-[2rem] object-cover shadow-xl"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Mission strip */}
-      <section className="mx-auto max-w-6xl px-4 py-20 text-center md:px-8">
-        <p className="mx-auto max-w-2xl font-display text-3xl leading-snug text-foreground md:text-4xl">
-          Where <em className="text-primary not-italic">Tint</em> Meets Radiance
-        </p>
-        <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">
-          Formulated with aloe, hyaluronic acid, and skin-loving pigments — for
-          a finish that feels weightless and lasts all day.
-        </p>
-      </section>
+      <HeroSlider />
+      <WelcomeSection />
 
       {/* Category grid */}
       <section id="tints" className="mx-auto max-w-7xl px-4 pb-8 md:px-8">
@@ -129,7 +97,9 @@ function HomePage() {
       {/* Featured products */}
       <section className="mx-auto max-w-7xl px-4 py-20 md:px-8">
         <div className="mb-10 flex items-end justify-between">
-          <h2 className="font-display text-4xl">Heavenly Tints</h2>
+          <h2 style={{ fontFamily: "var(--font-mattone)" }} className="text-4xl">
+            Heavenly Tints
+          </h2>
           <Link to="/shop" className="text-sm font-medium text-primary hover:underline">
             View all →
           </Link>
@@ -146,14 +116,103 @@ function HomePage() {
   );
 }
 
+/** Full-width auto-rotating slider — matches Elementor slides widget (550px, 2s autoplay). */
+function HeroSlider() {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setI((v) => (v + 1) % SLIDES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <section className="relative w-full overflow-hidden" style={{ height: "min(80vh, 640px)" }}>
+      {SLIDES.map((s, idx) => (
+        <div
+          key={idx}
+          className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+          style={{ opacity: i === idx ? 1 : 0 }}
+          aria-hidden={i !== idx}
+        >
+          <img src={s.img} alt="" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-black/15" />
+          {s.caption && (
+            <div className="absolute inset-0 flex items-center">
+              <div className="mx-auto flex w-full max-w-7xl flex-col items-start px-6 md:px-16">
+                <p
+                  style={{ fontFamily: "var(--font-mattone)", fontWeight: 300 }}
+                  className="text-white drop-shadow-sm text-[35px] leading-[1.05] md:text-[51px]"
+                >
+                  {s.caption}
+                </p>
+                {s.cta && (
+                  <Link
+                    to={s.cta.to}
+                    className="mt-6 inline-flex items-center gap-2 rounded-none border border-white bg-transparent px-6 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-white transition hover:bg-white hover:text-foreground"
+                  >
+                    {s.cta.label}
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+        {SLIDES.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setI(idx)}
+            aria-label={`Slide ${idx + 1}`}
+            className={
+              "h-1.5 rounded-full transition-all " +
+              (i === idx ? "w-8 bg-white" : "w-1.5 bg-white/60")
+            }
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** "Welcome To Heaven Beauty" — matches elementor-988603 intro section. */
+function WelcomeSection() {
+  return (
+    <section className="mx-auto max-w-6xl px-6 py-24 md:px-8 md:py-32">
+      <div className="max-w-2xl">
+        <p
+          style={{ fontFamily: "var(--font-mattone)", fontWeight: 300 }}
+          className="text-right text-2xl text-foreground/70 md:text-3xl"
+        >
+          Welcome To
+        </p>
+        <h1
+          style={{ fontFamily: "var(--font-mattone)", fontWeight: 400 }}
+          className="mt-2 text-left text-6xl leading-[1] text-foreground md:text-8xl"
+        >
+          Heaven Beauty
+        </h1>
+        <p className="mt-8 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
+          A touch of color designed to enhance your natural glow — soft,
+          radiant, and effortlessly you. Formulated with aloe, hyaluronic acid,
+          and skin-loving pigments.
+        </p>
+        <Link
+          to="/shop"
+          className="mt-8 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.2em] text-primary hover:gap-3 transition-all"
+        >
+          Discover the collection <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 function ProductCard({ product }: { product: WCProduct }) {
   const img = product.images[0]?.src;
   return (
-    <Link
-      to="/shop/$slug"
-      params={{ slug: product.slug }}
-      className="group block"
-    >
+    <Link to="/shop/$slug" params={{ slug: product.slug }} className="group block">
       <div className="aspect-square overflow-hidden rounded-2xl bg-blush/50">
         {img && (
           <img
