@@ -5,6 +5,7 @@ import { getProducts, getCategories, type WCProduct, type WCCategory } from "@/l
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
+import { ProductCard } from "@/components/product-card";
 import pureModelAsset from "@/assets/pure-model.jpg.asset.json";
 import storyModelAsset from "@/assets/story-model.jpg.asset.json";
 import differenceModelAsset from "@/assets/difference-model.jpg.asset.json";
@@ -197,7 +198,7 @@ function WhereTintSection() {
               radiant, and effortlessly you.
             </p>
             <Link
-              to="/shop"
+              to="/our-story"
               className="mt-6 inline-flex items-center rounded-sm border border-primary/70 px-5 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-primary transition hover:bg-primary hover:text-primary-foreground"
             >
               Our Story
@@ -245,32 +246,6 @@ function CategoryRow({
   );
 }
 
-function ProductCard({ product }: { product: WCProduct }) {
-  const img = product.images[0]?.src;
-  return (
-    <Link
-      to="/shop/$slug"
-      params={{ slug: product.slug }}
-      className="group block bg-card p-5 shadow-sm transition duration-500 hover:shadow-lg hover:-translate-y-1"
-    >
-      <div className="aspect-square overflow-hidden bg-card">
-        {img && (
-          <img
-            src={img}
-            alt={product.name}
-            className="h-full w-full object-contain transition duration-[900ms] ease-out group-hover:scale-[1.06]"
-          />
-        )}
-      </div>
-      <div className="mt-4">
-        <h3 className="text-sm text-foreground">{product.name}</h3>
-        <p className="mt-1 text-xs text-muted-foreground">
-          ${Number(product.price).toFixed(2)}
-        </p>
-      </div>
-    </Link>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* Glow line                                                          */
@@ -384,7 +359,7 @@ function OurStorySection() {
           as good as they look.
         </p>
         <Link
-          to="/shop"
+          to="/our-story"
           className="mt-8 text-xs uppercase tracking-[0.28em] text-primary underline underline-offset-[6px] hover:opacity-70"
         >
           Discover more
