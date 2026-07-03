@@ -1,43 +1,72 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { useCart, cartCount } from "@/lib/cart";
 
 const LOGO_URL =
   "https://myheavenbeauty.com/wp-content/uploads/2021/10/Screenshot__262_-removebg-preview-e1773776786591.png";
 
-export function SiteHeader() {
+export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
   const items = useCart();
   const count = cartCount(items);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!transparent) return;
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [transparent]);
+
+  const overlay = transparent && !scrolled;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-8">
-        <nav className="flex items-center gap-6 text-sm font-medium tracking-wide uppercase text-foreground/80">
-          <Link to="/shop" className="hover:text-primary transition-colors">
+    <header
+      className={
+        "fixed top-0 left-0 right-0 z-40 transition-colors duration-300 " +
+        (overlay
+          ? "bg-transparent"
+          : "bg-background/85 backdrop-blur border-b border-border/60")
+      }
+    >
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20 md:px-8">
+        <nav
+          className={
+            "flex items-center gap-6 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
+            (overlay ? "text-white/95" : "text-foreground/80")
+          }
+        >
+          <Link to="/shop" className="hover:opacity-70">
             Shop
           </Link>
-          <Link to="/" className="hover:text-primary transition-colors">
+          <Link to="/" className="hover:opacity-70">
             Home
           </Link>
         </nav>
 
         <Link to="/" className="absolute left-1/2 -translate-x-1/2">
-          <img src={LOGO_URL} alt="Heaven Beauty" className="h-12 w-auto md:h-14" />
+          <img
+            src={LOGO_URL}
+            alt="Heaven Beauty"
+            className={"h-10 w-auto md:h-12 " + (overlay ? "brightness-0 invert" : "")}
+          />
         </Link>
 
-        <div className="flex items-center gap-5">
-          <Link
-            to="/cart"
-            className="relative flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
-            aria-label="Cart"
-          >
-            <ShoppingBag className="h-5 w-5" />
-            <span className="hidden sm:inline">Cart</span>
-            <span className="absolute -top-2 -right-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-semibold text-primary-foreground">
-              {count}
-            </span>
-          </Link>
-        </div>
+        <Link
+          to="/cart"
+          className={
+            "relative flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
+            (overlay ? "text-white/95" : "text-foreground/80")
+          }
+          aria-label="Cart"
+        >
+          <ShoppingBag className="h-4 w-4" />
+          <span className="hidden sm:inline">Cart</span>
+          <span className="absolute -top-2 -right-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+            {count}
+          </span>
+        </Link>
       </div>
     </header>
   );
