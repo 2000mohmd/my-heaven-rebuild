@@ -58,10 +58,9 @@ export function Reveal({
     willChange: "opacity, transform",
   };
 
-  // @ts-expect-error dynamic tag
   return (
-    <As ref={ref as any} className={className} style={style}>
+    <div ref={ref} className={className} style={style}>
       {children}
-    </As>
+    </div>
   );
 }
