@@ -198,7 +198,7 @@ function WhereTintSection() {
               radiant, and effortlessly you.
             </p>
             <Link
-              to="/shop"
+              to="/our-story"
               className="mt-6 inline-flex items-center rounded-sm border border-primary/70 px-5 py-2 text-[11px] font-medium uppercase tracking-[0.22em] text-primary transition hover:bg-primary hover:text-primary-foreground"
             >
               Our Story
@@ -359,7 +359,7 @@ function OurStorySection() {
           as good as they look.
         </p>
         <Link
-          to="/shop"
+          to="/our-story"
           className="mt-8 text-xs uppercase tracking-[0.28em] text-primary underline underline-offset-[6px] hover:opacity-70"
         >
           Discover more
