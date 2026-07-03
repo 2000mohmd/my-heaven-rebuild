@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -18,21 +18,12 @@ export const Route = createFileRoute("/cart")({
 function CartPage() {
   const items = useCart();
   const total = cartTotal(items);
+  const navigate = useNavigate();
 
   const handleCheckout = () => {
-    // Build a WooCommerce add-to-cart URL then send to their checkout
-    const query = items.map((i) => `add-to-cart=${i.id}&quantity=${i.quantity}`).join("&");
-    // WooCommerce only accepts one add-to-cart per URL — visit each, ending on checkout.
-    // Simpler: build a checkout URL with a query per product isn't supported.
-    // Use a redirect page that hits each add-to-cart then finally /checkout.
-    const base = "https://myheavenbeauty.com";
-    if (items.length === 1) {
-      window.location.href = `${base}/checkout/?add-to-cart=${items[0].id}&quantity=${items[0].quantity}`;
-      return;
-    }
-    // Multi-item: open cart page with the first item and instruct user
-    window.location.href = `${base}/cart/?${query}`;
+    navigate({ to: "/checkout" });
   };
+
 
   return (
     <div className="min-h-screen">
