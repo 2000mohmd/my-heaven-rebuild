@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/woocommerce";
 
@@ -9,16 +10,23 @@ async function wc(path: string) {
     throw new Error("WooCommerce connector is not configured");
   }
   const res = await fetch(`${GATEWAY}${path}`, {
+    method: init?.method ?? "GET",
     headers: {
       Authorization: `Bearer ${lovableKey}`,
       "X-Connection-Api-Key": wcKey,
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
     },
+    body: init?.body,
   });
   if (!res.ok) {
     const body = await res.text();
     throw new Error(`WooCommerce error [${res.status}]: ${body.slice(0, 300)}`);
   }
   return res.json();
+}
+
+async function wc(path: string) {
+  return wcRequest(path);
 }
 
 export type WCImage = { id: number; src: string; alt: string };
