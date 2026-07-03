@@ -8,13 +8,14 @@
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 
-/* Mattone — drop the woff2 files into public/fonts/ to activate. Falls back to Fraunces until then. */
+/* Mattone 150 (Light) — user-provided, served from CDN */
 @font-face {
   font-family: "Mattone";
-  font-weight: 300 700;
+  font-weight: 100 400;
+  font-style: normal;
   font-display: swap;
-  src: local("Mattone"),
-       url("/fonts/Mattone.woff2") format("woff2");
+  src: url("/__l5e/assets-v1/0ec1b58c-765d-4499-92b3-10c4ea4f95f9/Mattone-150.woff2") format("woff2"),
+       url("/__l5e/assets-v1/aed285ad-3ecc-4cc4-a5e7-7facac1502c1/Mattone-150.woff") format("woff");
 }
 
 @custom-variant dark (&:is(.dark *));
