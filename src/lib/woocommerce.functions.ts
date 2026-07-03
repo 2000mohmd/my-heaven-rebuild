@@ -66,3 +66,32 @@ export const getCategories = createServerFn({ method: "GET" }).handler(async () 
   const cats = (await wc(`/products/categories?per_page=50&hide_empty=true`)) as WCCategory[];
   return cats.filter((c) => c.slug !== "uncategorized");
 });
+
+const orderSchema = z.object({
+  billing: z.object({
+    first_name: z.string().min(1),
+    last_name: z.string().min(1),
+    address_1: z.string().min(1),
+    city: z.string().min(1),
+    postcode: z.string().default(""),
+    country: z.string().min(2),
+    email: z.string().email(),
+    phone: z.string().min(3),
+  }),
+  line_items: z.array(z.object({ product_id: z.number(), quantity: z.number().min(1) })).min(1),
+});
+
+export const createOrder = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => orderSchema.parse(d))
+  .handler(async ({ data }) => {
+    const body = JSON.stringify({
+      payment_method: "cod",
+      payment_method_title: "Cash on Delivery",
+      set_paid: false,
+      billing: data.billing,
+      shipping: data.billing,
+      line_items: data.line_items,
+    });
+    const order = await wc(`/orders`, { method: "POST", body });
+    return { id: order.id as number, number: String(order.number ?? order.id), total: String(order.total ?? "") };
+  });
