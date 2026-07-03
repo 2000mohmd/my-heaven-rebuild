@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { getProducts, getCategories, type WCProduct, type WCCategory } from "@/lib/woocommerce.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import pureModelAsset from "@/assets/pure-model.jpg.asset.json";
+import storyModelAsset from "@/assets/story-model.jpg.asset.json";
+import differenceModelAsset from "@/assets/difference-model.jpg.asset.json";
 
 /* Slides — from Elementor export */
 const SLIDES = [
@@ -24,15 +27,11 @@ const SLIDES = [
   },
 ];
 
-/* Section images pulled from the Elementor exports */
-const IMG_PURE_MODEL =
-  "https://aqua-clam-453674.hostingersite.com/wp-content/uploads/2026/03/heavenbeauty.lb_1761588489_3752798711735670046_65902285909-e1773855610126.jpg";
-const IMG_STORY_MODEL =
-  "https://aqua-clam-453674.hostingersite.com/wp-content/uploads/2026/03/heavenbeauty.lb_1760457592_3743312055324379350_65902285909.jpg";
-const IMG_DIFFERENCE_MODEL =
-  "https://aqua-clam-453674.hostingersite.com/wp-content/uploads/2026/04/IMG_2407.JPG-scaled.jpeg";
-const IMG_GLOW_INLINE =
-  "https://aqua-clam-453674.hostingersite.com/wp-content/uploads/2026/03/heavenbeauty.lb_1759404600_3734386834160752460_65902285909.jpg";
+/* Section images — uploaded to CDN */
+const IMG_PURE_MODEL = pureModelAsset.url;
+const IMG_STORY_MODEL = storyModelAsset.url;
+const IMG_DIFFERENCE_MODEL = differenceModelAsset.url;
+const IMG_GLOW_INLINE = storyModelAsset.url;
 
 const productsQO = () =>
   queryOptions({
