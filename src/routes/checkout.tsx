@@ -19,6 +19,10 @@ export const Route = createFileRoute("/checkout")({
 });
 
 type OrderResult = { id: number; number: string; total: string };
+type OrderPayload = {
+  billing: { first_name: string; last_name: string; address_1: string; city: string; postcode: string; country: string; email: string; phone: string };
+  line_items: { product_id: number; quantity: number }[];
+};
 
 function CheckoutPage() {
   const items = useCart();
@@ -28,8 +32,7 @@ function CheckoutPage() {
   const [placed, setPlaced] = useState<OrderResult | null>(null);
 
   const mutation = useMutation({
-    mutationFn: (payload: Parameters<typeof createOrder>[0]["data"]) =>
-      createOrderFn({ data: payload }),
+    mutationFn: (payload: OrderPayload) => createOrderFn({ data: payload }),
     onSuccess: (order) => {
       setPlaced(order);
       clearCart();
