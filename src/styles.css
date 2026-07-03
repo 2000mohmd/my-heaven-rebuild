@@ -55,30 +55,32 @@
 }
 
 :root {
-  --radius: 1rem;
-  /* Soft blush palette matching Heaven Beauty */
-  --background: oklch(0.98 0.008 20);
-  --foreground: oklch(0.42 0.06 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.42 0.06 250);
+  --radius: 0.5rem;
+  /* Heaven Beauty — cool blue-grey palette from live site */
+  --background: oklch(0.955 0.008 240);         /* #e7ecf2 cool cloud */
+  --foreground: oklch(0.42 0.05 245);            /* deep slate */
+  --card: oklch(0.99 0.003 240);
+  --card-foreground: oklch(0.42 0.05 245);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.42 0.06 250);
-  --primary: oklch(0.72 0.13 15);
-  --primary-foreground: oklch(0.99 0.005 20);
-  --secondary: oklch(0.94 0.03 20);
-  --secondary-foreground: oklch(0.42 0.06 250);
-  --muted: oklch(0.95 0.02 20);
-  --muted-foreground: oklch(0.55 0.05 245);
-  --accent: oklch(0.9 0.05 15);
-  --accent-foreground: oklch(0.42 0.06 250);
+  --popover-foreground: oklch(0.42 0.05 245);
+  --primary: oklch(0.6 0.07 245);                /* cadet blue for headings/buttons */
+  --primary-foreground: oklch(0.99 0.003 240);
+  --secondary: oklch(0.93 0.02 240);
+  --secondary-foreground: oklch(0.42 0.05 245);
+  --muted: oklch(0.93 0.015 240);
+  --muted-foreground: oklch(0.55 0.04 245);
+  --accent: oklch(0.9 0.03 240);
+  --accent-foreground: oklch(0.42 0.05 245);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0.005 20);
-  --border: oklch(0.9 0.02 20);
-  --input: oklch(0.92 0.02 20);
-  --ring: oklch(0.72 0.13 15);
-  --blush: oklch(0.93 0.04 15);
-  --cloud: oklch(0.92 0.03 240);
-  --ink: oklch(0.42 0.06 250);
+  --border: oklch(0.88 0.015 240);
+  --input: oklch(0.9 0.015 240);
+  --ring: oklch(0.6 0.07 245);
+  --blush: oklch(0.9 0.045 15);                  /* pink block bg */
+  --cream: oklch(0.94 0.02 70);                  /* our difference block */
+  --starry: oklch(0.78 0.06 245);                /* blue bg for "first of its kind" */
+  --cloud: oklch(0.92 0.015 240);
+  --ink: oklch(0.42 0.05 245);
 }
 
 @layer base {
