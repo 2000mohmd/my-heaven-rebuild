@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useCart, updateQty, removeFromCart, cartTotal, clearCart } from "@/lib/cart";
+import { useCountry } from "@/hooks/use-country";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -19,6 +20,7 @@ function CartPage() {
   const items = useCart();
   const total = cartTotal(items);
   const navigate = useNavigate();
+  const { format } = useCountry();
 
   const handleCheckout = () => {
     navigate({ to: "/checkout" });
@@ -78,7 +80,7 @@ function CartPage() {
                         </button>
                       </div>
                       <span className="text-sm font-semibold">
-                        ${(Number(it.price) * it.quantity).toFixed(2)}
+                        {format(Number(it.price) * it.quantity)}
                       </span>
                     </div>
                   </div>
@@ -91,7 +93,7 @@ function CartPage() {
               <div className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between text-muted-foreground">
                   <span>Subtotal</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{format(total)}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>Shipping</span>
@@ -99,7 +101,7 @@ function CartPage() {
                 </div>
                 <div className="mt-4 flex justify-between border-t border-border pt-4 text-base font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{format(total)}</span>
                 </div>
               </div>
               <button

@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { CountryProvider } from "@/hooks/use-country";
+import { CountryPickerModal } from "@/components/country-picker-modal";
 
 function NotFoundComponent() {
   return (
@@ -128,8 +130,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <CountryProvider>
+        <Outlet />
+        <CountryPickerModal />
+      </CountryProvider>
     </QueryClientProvider>
   );
 }

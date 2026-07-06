@@ -7,6 +7,7 @@ import { getProductBySlug, getProductReviews, createProductReview } from "@/lib/
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { addToCart } from "@/lib/cart";
+import { useCountry } from "@/hooks/use-country";
 
 
 const productQO = (slug: string) =>
@@ -71,21 +72,25 @@ export const Route = createFileRoute("/shop/$slug")({
 function ProductPage() {
   const { slug } = Route.useParams();
   const { data: product } = useSuspenseQuery(productQO(slug));
+  const { pricing, format, info } = useCountry();
   const [qty, setQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
   const [added, setAdded] = useState(false);
 
   if (!product) return null;
-  const price = Number(product.price);
-  const inStock = product.stock_status === "instock";
+  const override = pricing.get(product.id);
+  const price = override ? override.price : Number(product.price);
+  const inStock = product.stock_status === "instock" && !!override && override.available;
+  const notInCountry = !override || !override.available;
 
   const handleAdd = () => {
+    if (!inStock) return;
     addToCart(
       {
         id: product.id,
         slug: product.slug,
         name: product.name,
-        price: product.price,
+        price: String(price),
         image: product.images[0]?.src ?? "",
       },
       qty,
@@ -140,7 +145,10 @@ function ProductPage() {
             </p>
           )}
           <h1 className="mt-2 font-display text-4xl md:text-5xl">{product.name}</h1>
-          <p className="mt-4 text-3xl font-semibold text-primary">${price.toFixed(2)}</p>
+          <p className="mt-4 text-3xl font-semibold text-primary">{format(price)}</p>
+          {notInCountry && (
+            <p className="mt-2 text-sm text-destructive">Not available in {info.name} right now.</p>
+          )}
 
           {product.short_description && (
             <div
@@ -173,7 +181,7 @@ function ProductPage() {
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
             >
               <ShoppingBag className="h-4 w-4" />
-              {added ? "Added ✓" : inStock ? "Add to bag" : "Sold out"}
+              {added ? "Added ✓" : notInCountry ? "Unavailable in your region" : inStock ? "Add to bag" : "Sold out"}
             </button>
           </div>
 
