@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart, cartCount } from "@/lib/cart";
 import { CountrySwitcher } from "@/components/country-switcher";
 
@@ -11,6 +11,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
   const items = useCart();
   const count = cartCount(items);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!transparent) return;
@@ -20,7 +21,16 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [transparent]);
 
-  const overlay = transparent && !scrolled;
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [menuOpen]);
+
+  const overlay = transparent && !scrolled && !menuOpen;
 
   return (
     <header
@@ -32,9 +42,24 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
       }
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20 md:px-8">
+        {/* Mobile hamburger */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          className={
+            "md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors " +
+            (overlay ? "text-white" : "text-foreground")
+          }
+        >
+          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+
+        {/* Desktop nav (left) */}
         <nav
           className={
-            "flex items-center gap-6 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
+            "hidden md:flex items-center gap-6 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
             (overlay ? "text-white/95" : "text-foreground/80")
           }
         >
@@ -46,10 +71,12 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
           </Link>
         </nav>
 
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2">
+        <Link to="/" className="absolute left-1/2 -translate-x-1/2" onClick={() => setMenuOpen(false)}>
           <img
             src={LOGO_URL}
             alt="Heaven Beauty"
+            width={160}
+            height={48}
             className={"h-10 w-auto md:h-12 " + (overlay ? "brightness-0 invert" : "")}
           />
         </Link>
@@ -72,6 +99,35 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
           </Link>
         </div>
       </div>
+
+      {/* Mobile menu panel */}
+      {menuOpen && (
+        <div className="md:hidden border-t border-border/60 bg-background">
+          <nav className="mx-auto flex max-w-7xl flex-col px-4 py-4 text-sm font-medium uppercase tracking-[0.18em] text-foreground">
+            <Link
+              to="/"
+              onClick={() => setMenuOpen(false)}
+              className="border-b border-border/50 py-3 hover:opacity-70"
+            >
+              Home
+            </Link>
+            <Link
+              to="/shop"
+              onClick={() => setMenuOpen(false)}
+              className="border-b border-border/50 py-3 hover:opacity-70"
+            >
+              Shop
+            </Link>
+            <Link
+              to="/our-story"
+              onClick={() => setMenuOpen(false)}
+              className="py-3 hover:opacity-70"
+            >
+              Our Story
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
