@@ -51,6 +51,27 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(productsQO());
     context.queryClient.ensureQueryData(catsQO());
   },
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: SLIDES[0].img, fetchpriority: "high" },
+      { rel: "canonical", href: "https://my-heaven-rebuild.lovable.app/" },
+    ],
+    meta: [
+      { property: "og:url", content: "https://my-heaven-rebuild.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Heaven Beauty",
+          url: "https://my-heaven-rebuild.lovable.app",
+          logo: "https://myheavenbeauty.com/wp-content/uploads/2021/10/Screenshot__262_-removebg-preview-e1773776786591.png",
+        }),
+      },
+    ],
+  }),
   component: HomePage,
   errorComponent: ({ error, reset }) => (
     <div className="mx-auto max-w-xl p-10 text-center">
