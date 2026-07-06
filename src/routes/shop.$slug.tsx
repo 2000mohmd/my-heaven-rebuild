@@ -1,11 +1,13 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Minus, Plus, ShoppingBag, ArrowLeft } from "lucide-react";
-import { getProductBySlug } from "@/lib/woocommerce.functions";
+import { queryOptions, useSuspenseQuery, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState, type FormEvent } from "react";
+import { Minus, Plus, ShoppingBag, ArrowLeft, Star } from "lucide-react";
+import { getProductBySlug, getProductReviews, createProductReview } from "@/lib/woocommerce.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { addToCart } from "@/lib/cart";
+
 
 const productQO = (slug: string) =>
   queryOptions({
