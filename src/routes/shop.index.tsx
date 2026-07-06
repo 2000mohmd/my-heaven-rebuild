@@ -21,7 +21,7 @@ const catsQO = () =>
     queryFn: () => getCategories(),
   });
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/shop/")({
   validateSearch: searchSchema,
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(productsQO());
