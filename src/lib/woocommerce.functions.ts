@@ -153,10 +153,14 @@ export type WCOrder = {
 export const listOrders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role" as never, {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role" as never, {
       _user_id: context.userId,
       _role: "admin",
     } as never);
+    if (roleError) {
+      console.error("[listOrders] has_role error:", roleError);
+      throw new Error(`Role check failed: ${roleError.message}`);
+    }
     if (!isAdmin) throw new Error("Forbidden");
     return (await wc(`/orders?per_page=50&orderby=date&order=desc`)) as WCOrder[];
   });
