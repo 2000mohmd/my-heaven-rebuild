@@ -98,7 +98,7 @@ function ProductPage() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
+      <div className="mx-auto max-w-7xl px-4 pt-24 pb-4 md:px-8 md:pt-32">
         <Link to="/shop" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
           <ArrowLeft className="h-4 w-4" /> Back to shop
         </Link>
