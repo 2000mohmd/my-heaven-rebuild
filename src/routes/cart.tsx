@@ -29,7 +29,7 @@ function CartPage() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <section className="mx-auto max-w-5xl px-4 py-14 md:px-8">
+      <section className="mx-auto max-w-5xl px-4 pt-24 pb-14 md:px-8 md:pt-32">
         <h1 className="font-display text-4xl md:text-5xl">Your bag</h1>
 
         {items.length === 0 ? (
