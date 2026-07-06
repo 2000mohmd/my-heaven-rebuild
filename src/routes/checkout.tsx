@@ -100,7 +100,7 @@ function CheckoutPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <section className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-[1fr_380px] md:px-8">
+      <section className="mx-auto grid max-w-6xl gap-12 px-6 pt-24 pb-16 md:grid-cols-[1fr_380px] md:px-8 md:pt-32">
         <div>
           <h1 className="text-primary text-3xl md:text-4xl" style={{ fontFamily: "var(--font-mattone)", fontWeight: 300 }}>
             Checkout

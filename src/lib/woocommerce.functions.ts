@@ -95,3 +95,39 @@ export const createOrder = createServerFn({ method: "POST" })
     const order = await wc(`/orders`, { method: "POST", body });
     return { id: order.id as number, number: String(order.number ?? order.id), total: String(order.total ?? "") };
   });
+
+export type WCReview = {
+  id: number;
+  date_created: string;
+  product_id: number;
+  reviewer: string;
+  review: string;
+  rating: number;
+  verified: boolean;
+};
+
+export const getProductReviews = createServerFn({ method: "GET" })
+  .inputValidator((d: { product_id: number }) => d)
+  .handler(async ({ data }) => {
+    const params = new URLSearchParams();
+    params.set("product", String(data.product_id));
+    params.set("per_page", "50");
+    return (await wc(`/products/reviews?${params}`)) as WCReview[];
+  });
+
+const reviewSchema = z.object({
+  product_id: z.number(),
+  reviewer: z.string().min(1),
+  reviewer_email: z.string().email(),
+  review: z.string().min(1),
+  rating: z.number().int().min(1).max(5),
+});
+
+export const createProductReview = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => reviewSchema.parse(d))
+  .handler(async ({ data }) => {
+    const body = JSON.stringify(data);
+    const review = await wc(`/products/reviews`, { method: "POST", body });
+    return review as WCReview;
+  });
+

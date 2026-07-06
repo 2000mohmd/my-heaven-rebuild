@@ -1,11 +1,13 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Minus, Plus, ShoppingBag, ArrowLeft } from "lucide-react";
-import { getProductBySlug } from "@/lib/woocommerce.functions";
+import { queryOptions, useSuspenseQuery, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState, type FormEvent } from "react";
+import { Minus, Plus, ShoppingBag, ArrowLeft, Star } from "lucide-react";
+import { getProductBySlug, getProductReviews, createProductReview } from "@/lib/woocommerce.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { addToCart } from "@/lib/cart";
+
 
 const productQO = (slug: string) =>
   queryOptions({
@@ -96,7 +98,7 @@ function ProductPage() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
+      <div className="mx-auto max-w-7xl px-4 pt-24 pb-4 md:px-8 md:pt-32">
         <Link to="/shop" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
           <ArrowLeft className="h-4 w-4" /> Back to shop
         </Link>
@@ -189,7 +191,170 @@ function ProductPage() {
         </div>
       </section>
 
+      <ReviewsSection productId={product.id} />
+
       <SiteFooter />
     </div>
   );
 }
+
+function ReviewsSection({ productId }: { productId: number }) {
+  const qc = useQueryClient();
+  const fetchReviews = useServerFn(getProductReviews);
+  const submitReview = useServerFn(createProductReview);
+  const key = ["reviews", productId] as const;
+
+  const { data: reviews = [], isLoading } = useQuery({
+    queryKey: key,
+    queryFn: () => fetchReviews({ data: { product_id: productId } }),
+  });
+
+  const [rating, setRating] = useState(5);
+  const [hover, setHover] = useState(0);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: (payload: { reviewer: string; reviewer_email: string; review: string }) =>
+      submitReview({ data: { product_id: productId, rating, ...payload } }),
+    onSuccess: () => {
+      setMsg("Thanks! Your review was submitted and will appear after moderation.");
+      qc.invalidateQueries({ queryKey: key });
+    },
+    onError: (e: Error) => setMsg(e.message),
+  });
+
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setMsg(null);
+    const f = new FormData(e.currentTarget);
+    mutation.mutate({
+      reviewer: String(f.get("reviewer") ?? ""),
+      reviewer_email: String(f.get("reviewer_email") ?? ""),
+      review: String(f.get("review") ?? ""),
+    });
+    (e.currentTarget as HTMLFormElement).reset();
+    setRating(5);
+  };
+
+  const avg = reviews.length
+    ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+    : 0;
+
+  return (
+    <section className="mx-auto max-w-7xl border-t border-border px-4 py-16 md:px-8">
+      <div className="grid gap-12 md:grid-cols-[1fr_1.2fr]">
+        <div>
+          <h2 className="font-display text-3xl md:text-4xl">Reviews</h2>
+          {reviews.length > 0 && (
+            <div className="mt-3 flex items-center gap-2">
+              <Stars value={Math.round(avg)} />
+              <span className="text-sm text-muted-foreground">
+                {avg.toFixed(1)} · {reviews.length} review{reviews.length === 1 ? "" : "s"}
+              </span>
+            </div>
+          )}
+
+          <div className="mt-6 space-y-6">
+            {isLoading && <p className="text-sm text-muted-foreground">Loading reviews…</p>}
+            {!isLoading && reviews.length === 0 && (
+              <p className="text-sm text-muted-foreground">No reviews yet. Be the first!</p>
+            )}
+            {reviews.map((r) => (
+              <article key={r.id} className="border-b border-border/60 pb-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">{r.reviewer}</p>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(r.date_created).toLocaleDateString()}
+                  </span>
+                </div>
+                <Stars value={r.rating} />
+                <div
+                  className="prose prose-sm mt-2 max-w-none text-foreground/80"
+                  dangerouslySetInnerHTML={{ __html: r.review }}
+                />
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <form onSubmit={submit} className="h-fit rounded-2xl border border-border bg-card p-6">
+          <h3 className="font-display text-2xl">Write a review</h3>
+
+          <div className="mt-4">
+            <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/70">
+              Your rating
+            </label>
+            <div className="flex gap-1" onMouseLeave={() => setHover(0)}>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setRating(n)}
+                  onMouseEnter={() => setHover(n)}
+                  aria-label={`${n} star`}
+                >
+                  <Star
+                    className={
+                      "h-6 w-6 " +
+                      ((hover || rating) >= n
+                        ? "fill-primary text-primary"
+                        : "text-muted-foreground")
+                    }
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <input
+              name="reviewer"
+              required
+              placeholder="Name"
+              className="w-full rounded-sm border border-border bg-white/70 px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+            />
+            <input
+              name="reviewer_email"
+              type="email"
+              required
+              placeholder="Email"
+              className="w-full rounded-sm border border-border bg-white/70 px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+            />
+          </div>
+          <textarea
+            name="review"
+            required
+            rows={5}
+            placeholder="Share your thoughts…"
+            className="mt-4 w-full rounded-sm border border-border bg-white/70 px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
+          />
+          {msg && <p className="mt-3 text-sm text-muted-foreground">{msg}</p>}
+          <button
+            type="submit"
+            disabled={mutation.isPending}
+            className="mt-4 w-full rounded-full bg-primary px-8 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
+          >
+            {mutation.isPending ? "Submitting…" : "Submit review"}
+          </button>
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Reviews may be held for moderation before appearing.
+          </p>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function Stars({ value }: { value: number }) {
+  return (
+    <div className="flex">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star
+          key={n}
+          className={"h-4 w-4 " + (n <= value ? "fill-primary text-primary" : "text-muted-foreground")}
+        />
+      ))}
+    </div>
+  );
+}
+

@@ -58,7 +58,7 @@ function ShopPage() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <section className="border-b border-border/60 bg-blush/40">
+      <section className="border-b border-border/60 bg-blush/40 pt-16 md:pt-20">
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-8">
           <h1 className="font-display text-5xl">Shop</h1>
           <p className="mt-2 text-sm text-muted-foreground">
