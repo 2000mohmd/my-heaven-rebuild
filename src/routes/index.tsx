@@ -109,13 +109,18 @@ function HeroSlider() {
       {SLIDES.map((s, idx) => (
         <div
           key={idx}
-          className="absolute inset-0 transition-opacity duration-[1200ms] ease-in-out"
+          className={
+            "absolute inset-0 transition-opacity duration-[1200ms] ease-in-out " +
+            (i === idx ? "" : "pointer-events-none")
+          }
           style={{ opacity: i === idx ? 1 : 0 }}
           aria-hidden={i !== idx}
         >
           <img
             src={s.img}
             alt=""
+            loading={idx === 0 ? "eager" : "lazy"}
+            fetchPriority={idx === 0 ? "high" : "auto"}
             className="h-full w-full object-cover"
             style={{
               transform: i === idx ? "scale(1.04)" : "scale(1)",
