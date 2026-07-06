@@ -51,6 +51,27 @@ export const Route = createFileRoute("/")({
     context.queryClient.ensureQueryData(productsQO());
     context.queryClient.ensureQueryData(catsQO());
   },
+  head: () => ({
+    links: [
+      { rel: "preload", as: "image", href: SLIDES[0].img, fetchpriority: "high" },
+      { rel: "canonical", href: "https://my-heaven-rebuild.lovable.app/" },
+    ],
+    meta: [
+      { property: "og:url", content: "https://my-heaven-rebuild.lovable.app/" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Heaven Beauty",
+          url: "https://my-heaven-rebuild.lovable.app",
+          logo: "https://myheavenbeauty.com/wp-content/uploads/2021/10/Screenshot__262_-removebg-preview-e1773776786591.png",
+        }),
+      },
+    ],
+  }),
   component: HomePage,
   errorComponent: ({ error, reset }) => (
     <div className="mx-auto max-w-xl p-10 text-center">
@@ -109,13 +130,18 @@ function HeroSlider() {
       {SLIDES.map((s, idx) => (
         <div
           key={idx}
-          className="absolute inset-0 transition-opacity duration-[1200ms] ease-in-out"
+          className={
+            "absolute inset-0 transition-opacity duration-[1200ms] ease-in-out " +
+            (i === idx ? "" : "pointer-events-none")
+          }
           style={{ opacity: i === idx ? 1 : 0 }}
           aria-hidden={i !== idx}
         >
           <img
             src={s.img}
             alt=""
+            loading={idx === 0 ? "eager" : "lazy"}
+            fetchPriority={idx === 0 ? "high" : "auto"}
             className="h-full w-full object-cover"
             style={{
               transform: i === idx ? "scale(1.04)" : "scale(1)",
