@@ -5,6 +5,7 @@ import { getProducts, getCategories } from "@/lib/woocommerce.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ProductCard } from "@/components/product-card";
+import { useCountry } from "@/hooks/use-country";
 
 const searchSchema = z.object({
   category: z.string().optional(),
@@ -49,10 +50,12 @@ function ShopPage() {
   const { category } = Route.useSearch();
   const { data: products } = useSuspenseQuery(productsQO());
   const { data: categories } = useSuspenseQuery(catsQO());
+  const { pricing } = useCountry();
 
+  const available = products.filter((p) => pricing.has(p.id));
   const filtered = category
-    ? products.filter((p) => p.categories.some((c) => c.slug === category))
-    : products;
+    ? available.filter((p) => p.categories.some((c) => c.slug === category))
+    : available;
 
   return (
     <div className="min-h-screen">

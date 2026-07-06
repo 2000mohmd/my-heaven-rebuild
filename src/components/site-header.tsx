@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { useCart, cartCount } from "@/lib/cart";
+import { CountrySwitcher } from "@/components/country-switcher";
 
 const LOGO_URL =
   "https://myheavenbeauty.com/wp-content/uploads/2021/10/Screenshot__262_-removebg-preview-e1773776786591.png";
@@ -53,20 +54,23 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
           />
         </Link>
 
-        <Link
-          to="/cart"
-          className={
-            "relative flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
-            (overlay ? "text-white/95" : "text-foreground/80")
-          }
-          aria-label="Cart"
-        >
-          <ShoppingBag className="h-4 w-4" />
-          <span className="hidden sm:inline">Cart</span>
-          <span className="absolute -top-2 -right-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
-            {count}
-          </span>
-        </Link>
+        <div className="flex items-center gap-4">
+          <CountrySwitcher light={overlay} />
+          <Link
+            to="/cart"
+            className={
+              "relative flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
+              (overlay ? "text-white/95" : "text-foreground/80")
+            }
+            aria-label="Cart"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            <span className="hidden sm:inline">Cart</span>
+            <span className="absolute -top-2 -right-3 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+              {count}
+            </span>
+          </Link>
+        </div>
       </div>
     </header>
   );

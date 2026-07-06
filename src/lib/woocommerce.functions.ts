@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const GATEWAY = "https://connector-gateway.lovable.dev/woocommerce";
 
@@ -130,4 +131,34 @@ export const createProductReview = createServerFn({ method: "POST" })
     const review = await wc(`/products/reviews`, { method: "POST", body });
     return review as WCReview;
   });
+
+export type WCOrder = {
+  id: number;
+  number: string;
+  status: string;
+  currency: string;
+  total: string;
+  date_created: string;
+  billing: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    city: string;
+    country: string;
+  };
+  line_items: { id: number; name: string; quantity: number; total: string }[];
+};
+
+export const listOrders = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role" as never, {
+      _user_id: context.userId,
+      _role: "admin",
+    } as never);
+    if (!isAdmin) throw new Error("Forbidden");
+    return (await wc(`/orders?per_page=50&orderby=date&order=desc`)) as WCOrder[];
+  });
+
 

@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useCart, cartTotal, clearCart } from "@/lib/cart";
 import { createOrder } from "@/lib/woocommerce.functions";
+import { useCountry } from "@/hooks/use-country";
+import { COUNTRIES, COUNTRY_CODES } from "@/lib/country";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -28,6 +30,7 @@ function CheckoutPage() {
   const items = useCart();
   const total = cartTotal(items);
   const navigate = useNavigate();
+  const { country, format } = useCountry();
   const createOrderFn = useServerFn(createOrder);
   const [placed, setPlaced] = useState<OrderResult | null>(null);
 
@@ -122,16 +125,12 @@ function CheckoutPage() {
               <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/70">Country</label>
               <select
                 name="country"
-                defaultValue="LB"
+                defaultValue={country ?? "LB"}
                 className="w-full rounded-sm border border-border bg-white/70 px-3 py-2.5 text-sm focus:border-primary focus:outline-none"
               >
-                <option value="LB">Lebanon</option>
-                <option value="AE">United Arab Emirates</option>
-                <option value="SA">Saudi Arabia</option>
-                <option value="KW">Kuwait</option>
-                <option value="QA">Qatar</option>
-                <option value="US">United States</option>
-                <option value="GB">United Kingdom</option>
+                {COUNTRY_CODES.map((c) => (
+                  <option key={c} value={c}>{COUNTRIES[c].flag} {COUNTRIES[c].name}</option>
+                ))}
               </select>
             </div>
 
@@ -153,7 +152,7 @@ function CheckoutPage() {
               disabled={mutation.isPending}
               className="w-full rounded-sm border border-primary bg-primary px-8 py-3.5 text-[11px] font-medium uppercase tracking-[0.22em] text-primary-foreground transition hover:bg-transparent hover:text-primary disabled:opacity-60"
             >
-              {mutation.isPending ? "Placing order…" : `Place order — $${total.toFixed(2)}`}
+              {mutation.isPending ? "Placing order…" : `Place order — ${format(total)}`}
             </button>
           </form>
         </div>
@@ -170,13 +169,13 @@ function CheckoutPage() {
                   <p className="text-foreground">{it.name}</p>
                   <p className="text-xs text-muted-foreground">Qty {it.quantity}</p>
                 </div>
-                <span className="text-sm">${(Number(it.price) * it.quantity).toFixed(2)}</span>
+                <span className="text-sm">{format(Number(it.price) * it.quantity)}</span>
               </li>
             ))}
           </ul>
           <div className="mt-4 flex justify-between border-t border-border pt-4 text-base font-semibold">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>{format(total)}</span>
           </div>
         </aside>
       </section>
