@@ -127,6 +127,7 @@ function HeroSlider() {
 
   return (
     <section className="relative w-full overflow-hidden" style={{ height: "min(100vh, 820px)" }}>
+      <h1 className="sr-only">Heaven Beauty — Effortless Glow and Natural Tints</h1>
       {SLIDES.map((s, idx) => (
         <div
           key={idx}
@@ -151,7 +152,7 @@ function HeroSlider() {
           {s.caption && (
             <div className="absolute inset-0 flex items-center">
               <div className="mx-auto flex w-full max-w-7xl flex-col items-start px-6 md:px-14">
-                <h1
+                <h2
                   className="text-white drop-shadow-sm"
                   style={{
                     fontFamily: "var(--font-mattone)",
@@ -165,7 +166,7 @@ function HeroSlider() {
                   }}
                 >
                   {s.caption}
-                </h1>
+                </h2>
                 {s.cta && (
                   <Link
                     to={s.cta.to}
