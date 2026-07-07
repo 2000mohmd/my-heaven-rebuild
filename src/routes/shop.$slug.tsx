@@ -20,16 +20,34 @@ export const Route = createFileRoute("/shop/$slug")({
   loader: async ({ context, params }) => {
     const product = await context.queryClient.ensureQueryData(productQO(params.slug));
     if (!product) throw notFound();
+    return product;
   },
   head: ({ loaderData, params }) => {
     const title = params?.slug
       ? `${params.slug.replace(/-/g, " ")} — Heaven Beauty`
       : "Product — Heaven Beauty";
+
+    const productName = loaderData?.name ?? params?.slug?.replace(/-/g, " ") ?? "this product";
+    const rawSnippet = loaderData?.short_description
+      ? loaderData.short_description.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+      : "";
+    const snippet = rawSnippet.length > 120 ? rawSnippet.slice(0, 117) + "..." : rawSnippet;
+
+    let description = snippet
+      ? `Shop ${productName} at Heaven Beauty. ${snippet}`
+      : `Shop ${productName} at Heaven Beauty — soft, radiant tints and blushes to enhance your natural glow.`;
+
+    if (description.length > 160) description = description.slice(0, 157) + "...";
+    if (description.length < 50) {
+      description = `Shop ${productName} and more beauty essentials at Heaven Beauty. Discover soft, radiant tints for your natural glow.`;
+    }
+
     return {
       meta: [
         { title },
-        { name: "description", content: "Shop this Heaven Beauty product." },
+        { name: "description", content: description },
         { property: "og:title", content: title },
+        { property: "og:description", content: description },
       ],
     };
   },
