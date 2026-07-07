@@ -56,7 +56,7 @@ export const Route = createFileRoute("/shop/$slug")({
           name: loaderData.name,
           description: rawSnippet || description,
           image: image ? [image] : undefined,
-          sku: loaderData.sku || String(loaderData.id),
+          sku: String(loaderData.id),
           brand: { "@type": "Brand", name: "Heaven Beauty" },
           offers: price
             ? {
