@@ -9,7 +9,9 @@ export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
       { title: "Your Bag — Heaven Beauty" },
-      { name: "description", content: "Review your Heaven Beauty selections and check out." },
+      { name: "description", content: "Review the tints, blushes, and beauty essentials in your Heaven Beauty bag before checking out." },
+      { property: "og:title", content: "Your Bag — Heaven Beauty" },
+      { property: "og:description", content: "Review the tints, blushes, and beauty essentials in your Heaven Beauty bag before checking out." },
       { name: "robots", content: "noindex" },
     ],
   }),

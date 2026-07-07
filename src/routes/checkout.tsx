@@ -13,7 +13,9 @@ export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
       { title: "Checkout — Heaven Beauty" },
-      { name: "description", content: "Complete your Heaven Beauty order." },
+      { name: "description", content: "Securely complete your Heaven Beauty order with cash on delivery and fast local shipping across the region." },
+      { property: "og:title", content: "Checkout — Heaven Beauty" },
+      { property: "og:description", content: "Securely complete your Heaven Beauty order with cash on delivery and fast local shipping across the region." },
       { name: "robots", content: "noindex" },
     ],
   }),
