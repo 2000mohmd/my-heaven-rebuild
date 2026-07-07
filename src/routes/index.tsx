@@ -344,10 +344,10 @@ function FirstOfItsKindSection() {
         >
           The first of it&rsquo;s kind
         </h2>
-        <p className="mt-4 text-sm uppercase tracking-[0.22em] text-white/90 md:text-base">
+        <p className="mt-4 text-sm uppercase tracking-[0.22em] text-white md:text-base">
           Introducing <span className="font-semibold">PURE</span>
         </p>
-        <p className="mt-6 max-w-md text-sm leading-relaxed text-white/90 md:text-base">
+        <p className="mt-6 max-w-md text-sm leading-relaxed text-white md:text-base">
           A soft, light pink created to enhance your natural beauty, blending
           seamlessly into your skin for a fresh, radiant glow that feels
           effortless and true to you.
@@ -387,7 +387,7 @@ function OurStorySection() {
         >
           Our Story
         </h2>
-        <p className="mt-6 max-w-sm text-sm leading-relaxed text-foreground/80 md:text-base">
+        <p className="mt-6 max-w-sm text-sm leading-relaxed text-foreground md:text-base">
           Heaven Beauty was created to redefine beauty as something effortless,
           intentional, and true to you. We design products that enhance your
           natural features, not mask them — starting with our signature tints
@@ -421,7 +421,7 @@ function OurDifferenceSection() {
         >
           Our Difference
         </h2>
-        <p className="mt-6 max-w-sm text-sm leading-relaxed text-foreground/80 md:text-base">
+        <p className="mt-6 max-w-sm text-sm leading-relaxed text-foreground md:text-base">
           Designed with good intention, made to feel like nothing on your skin.
           Our long-lasting, blendable tints adapt to every tone, leaving a
           soft, radiant glow — gentle even for sensitive skin.
