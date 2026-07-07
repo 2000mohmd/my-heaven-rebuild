@@ -59,6 +59,7 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     links: [
+      { rel: "preconnect", href: "https://myheavenbeauty.com" },
       { rel: "preload", as: "image", href: SLIDES[0].img, fetchpriority: "high" },
       { rel: "canonical", href: "https://my-heaven-rebuild.lovable.app/" },
     ],
