@@ -13,6 +13,11 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Build a standard Node server (.output/server/index.mjs) instead of a
+  // Cloudflare Worker bundle. Run with: node .output/server/index.mjs
+  nitro: {
+    preset: "node-server",
+  },
   vite: {
     plugins: [mcpPlugin()],
   },
