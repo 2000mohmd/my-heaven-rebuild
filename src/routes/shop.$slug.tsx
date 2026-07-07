@@ -42,13 +42,49 @@ export const Route = createFileRoute("/shop/$slug")({
       description = `Shop ${productName} and more beauty essentials at Heaven Beauty. Discover soft, radiant tints for your natural glow.`;
     }
 
+    const image = loaderData?.images?.[0]?.src;
+    const price = loaderData?.price ? String(loaderData.price) : undefined;
+    const availability =
+      loaderData?.stock_status === "instock"
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock";
+
+    const productLd = loaderData
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: loaderData.name,
+          description: rawSnippet || description,
+          image: image ? [image] : undefined,
+          sku: String(loaderData.id),
+          brand: { "@type": "Brand", name: "Heaven Beauty" },
+          offers: price
+            ? {
+                "@type": "Offer",
+                price,
+                priceCurrency: "USD",
+                availability,
+                url: `https://my-heaven-rebuild.lovable.app/shop/${params.slug}`,
+              }
+            : undefined,
+        }
+      : null;
+
     return {
       meta: [
         { title },
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        ...(image ? [{ property: "og:image", content: image } as const] : []),
+        { property: "og:type", content: "product" },
       ],
+      links: [
+        { rel: "canonical", href: `https://my-heaven-rebuild.lovable.app/shop/${params.slug}` },
+      ],
+      scripts: productLd
+        ? [{ type: "application/ld+json", children: JSON.stringify(productLd) }]
+        : undefined,
     };
   },
   component: ProductPage,

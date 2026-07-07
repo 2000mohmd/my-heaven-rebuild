@@ -23,6 +23,28 @@ export const Route = createFileRoute("/our-story")({
       { property: "og:image", content: storyHero.url },
       { property: "og:type", content: "article" },
     ],
+    links: [
+      { rel: "canonical", href: "https://my-heaven-rebuild.lovable.app/our-story" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: "Our Story — Heaven Beauty",
+          description:
+            "Founded by Lebanese beauty influencer Sarah Hammoud, Heaven Beauty was born from years of testing to enhance your natural glow.",
+          image: [storyHero.url],
+          author: { "@type": "Person", name: "Sarah Hammoud" },
+          publisher: {
+            "@type": "Organization",
+            name: "Heaven Beauty",
+          },
+          mainEntityOfPage: "https://my-heaven-rebuild.lovable.app/our-story",
+        }),
+      },
+    ],
   }),
   component: OurStoryPage,
 });
