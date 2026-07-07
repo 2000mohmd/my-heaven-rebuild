@@ -60,7 +60,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
         <nav
           className={
             "hidden md:flex items-center gap-6 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
-            (overlay ? "text-white/95" : "text-foreground/80")
+            (overlay ? "text-white" : "text-foreground")
           }
         >
           <Link to="/shop" className="hover:opacity-70">
@@ -87,7 +87,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             to="/cart"
             className={
               "relative flex items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors " +
-              (overlay ? "text-white/95" : "text-foreground/80")
+              (overlay ? "text-white" : "text-foreground")
             }
             aria-label="Cart"
           >

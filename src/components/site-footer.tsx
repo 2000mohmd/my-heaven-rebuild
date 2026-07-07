@@ -22,7 +22,7 @@ export function SiteFooter() {
         <div className="col-span-2 md:col-span-1">
           <a
             href="tel:+96178835078"
-            className="text-sm text-foreground/80 hover:text-primary"
+            className="text-sm text-foreground hover:text-primary"
           >
             +961 78 835 078
           </a>
@@ -32,7 +32,7 @@ export function SiteFooter() {
           <h4 className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
             About
           </h4>
-          <ul className="mt-5 space-y-2 text-sm text-foreground/80">
+          <ul className="mt-5 space-y-2 text-sm text-foreground">
             <li>
               <Link to="/our-story" className="hover:text-primary">
                 Our Story
