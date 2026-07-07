@@ -14,16 +14,22 @@ import differenceModelAsset from "@/assets/difference-model.jpg.asset.json";
 const SLIDES = [
   {
     img: "https://myheavenbeauty.com/wp-content/uploads/2026/04/IMG_2385.JPG-scaled.jpeg",
+    width: 1920,
+    height: 2560,
     caption: "Effortless Glow",
     cta: { label: "Shop All", to: "/shop" as const },
   },
   {
     img: "https://myheavenbeauty.com/wp-content/uploads/2026/04/IMG_2386.JPG-scaled.jpeg",
+    width: 1920,
+    height: 2560,
     caption: "",
     cta: null,
   },
   {
     img: "https://myheavenbeauty.com/wp-content/uploads/2026/06/IMG_5185.JPG-1-1-1-1-1-1-1-scaled.webp",
+    width: 1920,
+    height: 2560,
     caption: "",
     cta: null,
   },
@@ -53,6 +59,7 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     links: [
+      { rel: "preconnect", href: "https://myheavenbeauty.com" },
       { rel: "preload", as: "image", href: SLIDES[0].img, fetchpriority: "high" },
       { rel: "canonical", href: "https://my-heaven-rebuild.lovable.app/" },
     ],
@@ -141,6 +148,8 @@ function HeroSlider() {
           <img
             src={s.img}
             alt=""
+            width={s.width}
+            height={s.height}
             loading={idx === 0 ? "eager" : "lazy"}
             fetchPriority={idx === 0 ? "high" : "auto"}
             className="h-full w-full object-cover"
