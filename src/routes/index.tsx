@@ -147,6 +147,8 @@ function HeroSlider() {
           <img
             src={s.img}
             alt=""
+            width={s.width}
+            height={s.height}
             loading={idx === 0 ? "eager" : "lazy"}
             fetchPriority={idx === 0 ? "high" : "auto"}
             className="h-full w-full object-cover"
