@@ -1,0 +1,16 @@
+# Heaven Beauty
+
+> Effortless glow and natural tints — discover beauty products that feel as good as they look.
+
+Heaven Beauty is an online boutique for skincare, makeup, and self-care essentials. We curate clean, effective products designed to highlight your natural beauty with minimal effort.
+
+## Pages
+
+- [Home](/): Browse featured collections and hero highlights.
+- [Shop](/shop): Explore the full product catalog.
+- [Our Story](/our-story): Learn about Heaven Beauty and what we stand for.
+- [Cart](/cart): Review your selected items before checkout.
+
+## Optional
+
+- [Sitemap](/sitemap.xml): Machine-readable list of site URLs.
