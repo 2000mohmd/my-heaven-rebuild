@@ -2,19 +2,20 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const GATEWAY = "https://connector-gateway.lovable.dev/woocommerce";
-
 async function wc(path: string, init?: { method?: string; body?: string }) {
-  const lovableKey = process.env.LOVABLE_API_KEY;
-  const wcKey = process.env.WOOCOMMERCE_API_KEY;
-  if (!lovableKey || !wcKey) {
-    throw new Error("WooCommerce connector is not configured");
+  const storeUrl = process.env.WOO_STORE_URL;
+  const ck = process.env.WOO_CONSUMER_KEY;
+  const cs = process.env.WOO_CONSUMER_SECRET;
+  if (!storeUrl || !ck || !cs) {
+    throw new Error("WooCommerce is not configured (WOO_STORE_URL / WOO_CONSUMER_KEY / WOO_CONSUMER_SECRET missing)");
   }
-  const res = await fetch(`${GATEWAY}${path}`, {
+  const base = storeUrl.replace(/\/+$/, "");
+  const auth = Buffer.from(`${ck}:${cs}`).toString("base64");
+  const res = await fetch(`${base}/wp-json/wc/v3${path}`, {
     method: init?.method ?? "GET",
     headers: {
-      Authorization: `Bearer ${lovableKey}`,
-      "X-Connection-Api-Key": wcKey,
+      Authorization: `Basic ${auth}`,
+      Accept: "application/json",
       ...(init?.body ? { "Content-Type": "application/json" } : {}),
     },
     body: init?.body,
