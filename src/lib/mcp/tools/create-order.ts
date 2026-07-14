@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { createOrder } from "@/lib/woocommerce.functions";
+import { createOrder } from "@/lib/shop.functions";
 
 export default defineTool({
   name: "create_order",

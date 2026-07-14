@@ -5,7 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { useCart, cartTotal, clearCart } from "@/lib/cart";
-import { createOrder } from "@/lib/woocommerce.functions";
+import { createOrder } from "@/lib/shop.functions";
 import { useCountry } from "@/hooks/use-country";
 import { COUNTRIES, COUNTRY_CODES } from "@/lib/country";
 

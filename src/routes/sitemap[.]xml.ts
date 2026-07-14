@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { getProducts } from "@/lib/woocommerce.functions";
+import { getProducts } from "@/lib/shop.functions";
 
 const BASE_URL = "https://my-heaven-rebuild.lovable.app";
 

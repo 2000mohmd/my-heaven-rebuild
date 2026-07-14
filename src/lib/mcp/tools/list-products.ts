@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { getProducts } from "@/lib/woocommerce.functions";
+import { getProducts } from "@/lib/shop.functions";
 
 export default defineTool({
   name: "list_products",

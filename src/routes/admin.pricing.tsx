@@ -3,7 +3,7 @@ import { queryOptions, useMutation, useQuery, useQueryClient, useSuspenseQuery }
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Check, Loader2 } from "lucide-react";
-import { getProducts, type WCProduct } from "@/lib/woocommerce.functions";
+import { getProducts, type WCProduct } from "@/lib/shop.functions";
 import { getAllCountryPricing, upsertCountryPricing, type PricingRow } from "@/lib/pricing.functions";
 import { COUNTRIES, COUNTRY_CODES, type CountryCode } from "@/lib/country";
 

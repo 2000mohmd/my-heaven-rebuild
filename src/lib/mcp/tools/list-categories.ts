@@ -1,5 +1,5 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { getCategories } from "@/lib/woocommerce.functions";
+import { getCategories } from "@/lib/shop.functions";
 
 export default defineTool({
   name: "list_categories",

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { MouseEvent } from "react";
-import type { WCProduct } from "@/lib/woocommerce.functions";
+import type { WCProduct } from "@/lib/shop.functions";
 import { addToCart } from "@/lib/cart";
 import { useCountry } from "@/hooks/use-country";
 

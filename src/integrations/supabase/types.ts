@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       country_pricing: {
         Row: {
           available: boolean
@@ -40,6 +70,223 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      order_items: {
+        Row: {
+          id: string
+          line_total: number
+          order_id: string
+          product_id: number | null
+          product_name: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          id?: string
+          line_total: number
+          order_id: string
+          product_id?: number | null
+          product_name: string
+          quantity: number
+          unit_price: number
+        }
+        Update: {
+          id?: string
+          line_total?: number
+          order_id?: string
+          product_id?: number | null
+          product_name?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string
+          city: string
+          country: string
+          created_at: string
+          currency: string
+          customer_first_name: string
+          customer_last_name: string
+          email: string
+          id: string
+          notes: string | null
+          order_number: string
+          payment_method: string
+          phone: string
+          postcode: string
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          city: string
+          country: string
+          created_at?: string
+          currency?: string
+          customer_first_name: string
+          customer_last_name: string
+          email: string
+          id?: string
+          notes?: string | null
+          order_number?: string
+          payment_method?: string
+          phone: string
+          postcode?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          country?: string
+          created_at?: string
+          currency?: string
+          customer_first_name?: string
+          customer_last_name?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          order_number?: string
+          payment_method?: string
+          phone?: string
+          postcode?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      product_reviews: {
+        Row: {
+          approved: boolean
+          created_at: string
+          id: string
+          product_id: number
+          rating: number
+          review: string
+          reviewer: string
+          reviewer_email: string
+        }
+        Insert: {
+          approved?: boolean
+          created_at?: string
+          id?: string
+          product_id: number
+          rating: number
+          review: string
+          reviewer: string
+          reviewer_email: string
+        }
+        Update: {
+          approved?: boolean
+          created_at?: string
+          id?: string
+          product_id?: number
+          rating?: number
+          review?: string
+          reviewer?: string
+          reviewer_email?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          average_rating: number
+          category_id: string | null
+          created_at: string
+          description: string
+          id: number
+          images: Json
+          name: string
+          on_sale: boolean
+          price: number
+          published: boolean
+          rating_count: number
+          sale_price: number | null
+          short_description: string
+          slug: string
+          sort_order: number
+          stock_status: string
+          updated_at: string
+        }
+        Insert: {
+          average_rating?: number
+          category_id?: string | null
+          created_at?: string
+          description?: string
+          id?: number
+          images?: Json
+          name: string
+          on_sale?: boolean
+          price?: number
+          published?: boolean
+          rating_count?: number
+          sale_price?: number | null
+          short_description?: string
+          slug: string
+          sort_order?: number
+          stock_status?: string
+          updated_at?: string
+        }
+        Update: {
+          average_rating?: number
+          category_id?: string | null
+          created_at?: string
+          description?: string
+          id?: number
+          images?: Json
+          name?: string
+          on_sale?: boolean
+          price?: number
+          published?: boolean
+          rating_count?: number
+          sale_price?: number | null
+          short_description?: string
+          slug?: string
+          sort_order?: number
+          stock_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
