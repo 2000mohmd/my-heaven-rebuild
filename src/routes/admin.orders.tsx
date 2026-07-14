@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { listOrders } from "@/lib/woocommerce.functions";
+import { listOrders } from "@/lib/shop.functions";
 
 export const Route = createFileRoute("/admin/orders")({
   component: OrdersPage,

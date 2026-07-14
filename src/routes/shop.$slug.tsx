@@ -3,7 +3,7 @@ import { queryOptions, useSuspenseQuery, useQuery, useMutation, useQueryClient }
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { Minus, Plus, ShoppingBag, ArrowLeft, Star } from "lucide-react";
-import { getProductBySlug, getProductReviews, createProductReview } from "@/lib/woocommerce.functions";
+import { getProductBySlug, getProductReviews, createProductReview } from "@/lib/shop.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { addToCart } from "@/lib/cart";

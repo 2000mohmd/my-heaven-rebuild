@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { getProducts, getCategories, type WCProduct, type WCCategory } from "@/lib/woocommerce.functions";
+import { getProducts, getCategories, type WCProduct, type WCCategory } from "@/lib/shop.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
