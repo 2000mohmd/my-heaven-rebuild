@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
-import storyHero from "@/assets/story-hero.jpg.asset.json";
-import storyBerries from "@/assets/story-berries.jpg.asset.json";
+const storyHero = { url: "/images/story-hero.jpg" };
+const storyBerries = { url: "/images/story-berries.jpg" };
 
 export const Route = createFileRoute("/our-story")({
   head: () => ({

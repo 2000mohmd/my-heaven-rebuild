@@ -7,9 +7,6 @@ import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
 import { ProductCard } from "@/components/product-card";
 import { useCountry } from "@/hooks/use-country";
-import pureModelAsset from "@/assets/pure-model.jpg.asset.json";
-import storyModelAsset from "@/assets/story-model.jpg.asset.json";
-import differenceModelAsset from "@/assets/difference-model.jpg.asset.json";
 
 /* Slides — from Elementor export */
 const SLIDES = [
@@ -37,10 +34,10 @@ const SLIDES = [
 ];
 
 /* Section images — uploaded to CDN */
-const IMG_PURE_MODEL = pureModelAsset.url;
-const IMG_STORY_MODEL = storyModelAsset.url;
-const IMG_DIFFERENCE_MODEL = differenceModelAsset.url;
-const IMG_GLOW_INLINE = storyModelAsset.url;
+const IMG_PURE_MODEL = "/images/pure-model.jpg";
+const IMG_STORY_MODEL = "/images/story-model.jpg";
+const IMG_DIFFERENCE_MODEL = "/images/difference-model.jpg";
+const IMG_GLOW_INLINE = "/images/story-model.jpg";
 
 const productsQO = () =>
   queryOptions({
