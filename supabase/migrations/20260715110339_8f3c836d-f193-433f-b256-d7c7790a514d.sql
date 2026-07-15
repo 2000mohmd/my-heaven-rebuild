@@ -1,0 +1,1 @@
+CREATE POLICY "Admins insert reviews" ON public.product_reviews FOR INSERT TO authenticated WITH CHECK (has_role(auth.uid(), 'admin'::app_role));
