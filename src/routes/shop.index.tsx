@@ -52,7 +52,10 @@ function ShopPage() {
   const { data: categories } = useSuspenseQuery(catsQO());
   const { pricing } = useCountry();
 
-  const available = products.filter((p) => pricing.has(p.id));
+  const available = products.filter((p) => {
+    const o = pricing.get(p.id);
+    return !!o && o.available;
+  });
   const filtered = category
     ? available.filter((p) => p.categories.some((c) => c.slug === category))
     : available;
