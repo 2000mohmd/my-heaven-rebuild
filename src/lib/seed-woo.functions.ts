@@ -72,7 +72,9 @@ export const seedFromWoo = createServerFn({ method: "POST" })
     } as never);
     if (!isAdmin) throw new Error("Forbidden");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Use the authenticated admin user's client (RLS admin policies apply).
+    // The service role key is opaque (sb_secret_) and cannot be used with PostgREST here.
+    const supabaseAdmin = context.supabase;
 
     // ---- Categories ----
     const wooCats = await fetchAll<WooCat>("/products/categories?hide_empty=false");
