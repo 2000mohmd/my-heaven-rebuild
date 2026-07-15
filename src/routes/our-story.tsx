@@ -20,7 +20,7 @@ export const Route = createFileRoute("/our-story")({
         content:
           "The story behind Heaven Beauty — soft, radiant tints designed to enhance your natural beauty.",
       },
-      { property: "og:image", content: storyHero.url },
+      { property: "og:image", content: storyHero.absoluteUrl },
       { property: "og:type", content: "article" },
     ],
     links: [
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/our-story")({
           headline: "Our Story — Heaven Beauty",
           description:
             "Founded by Lebanese beauty influencer Sarah Hammoud, Heaven Beauty was born from years of testing to enhance your natural glow.",
-          image: [storyHero.url],
+          image: [storyHero.absoluteUrl],
           author: { "@type": "Person", name: "Sarah Hammoud" },
           publisher: {
             "@type": "Organization",
