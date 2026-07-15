@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
 import { ProductCard } from "@/components/product-card";
+import { useCountry } from "@/hooks/use-country";
 import pureModelAsset from "@/assets/pure-model.jpg.asset.json";
 import storyModelAsset from "@/assets/story-model.jpg.asset.json";
 import differenceModelAsset from "@/assets/difference-model.jpg.asset.json";
@@ -92,8 +93,13 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { data: products } = useSuspenseQuery(productsQO());
+  const { data: allProducts } = useSuspenseQuery(productsQO());
   const { data: categories } = useSuspenseQuery(catsQO());
+  const { pricing } = useCountry();
+  const products = allProducts.filter((p) => {
+    const o = pricing.get(p.id);
+    return !!o && o.available;
+  });
 
   const order = ["heavenly-tints", "sparkly-tints", "devotion"];
   const orderedCats = [...categories].sort(
