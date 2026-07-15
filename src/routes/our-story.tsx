@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
-const storyHero = { url: "/images/story-hero.jpg" };
+const storyHero = { url: "/images/story-hero.jpg", absoluteUrl: "https://my-heaven-rebuild.lovable.app/images/story-hero.jpg" };
 const storyBerries = { url: "/images/story-berries.jpg" };
 
 export const Route = createFileRoute("/our-story")({
