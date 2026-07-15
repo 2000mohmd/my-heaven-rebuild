@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
 import { ProductCard } from "@/components/product-card";
+import { useCountry } from "@/hooks/use-country";
 import pureModelAsset from "@/assets/pure-model.jpg.asset.json";
 import storyModelAsset from "@/assets/story-model.jpg.asset.json";
 import differenceModelAsset from "@/assets/difference-model.jpg.asset.json";
