@@ -92,8 +92,13 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { data: products } = useSuspenseQuery(productsQO());
+  const { data: allProducts } = useSuspenseQuery(productsQO());
   const { data: categories } = useSuspenseQuery(catsQO());
+  const { pricing } = useCountry();
+  const products = allProducts.filter((p) => {
+    const o = pricing.get(p.id);
+    return !!o && o.available;
+  });
 
   const order = ["heavenly-tints", "sparkly-tints", "devotion"];
   const orderedCats = [...categories].sort(
