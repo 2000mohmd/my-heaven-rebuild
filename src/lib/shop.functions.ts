@@ -333,8 +333,7 @@ export const createOrder = createServerFn({ method: "POST" })
       });
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order, error: oErr } = await supabaseAdmin
+    const { data: order, error: oErr } = await sb
       .from("orders")
       .insert({
         customer_first_name: data.billing.first_name,
@@ -356,7 +355,7 @@ export const createOrder = createServerFn({ method: "POST" })
     if (oErr) throw new Error(oErr.message);
     const o = order as unknown as { id: string; order_number: string; total: number | string };
 
-    const { error: iErr } = await supabaseAdmin
+    const { error: iErr } = await sb
       .from("order_items")
       .insert(lines.map((l) => ({ order_id: o.id, ...l })));
     if (iErr) throw new Error(iErr.message);
