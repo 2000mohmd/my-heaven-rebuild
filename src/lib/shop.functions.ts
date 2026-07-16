@@ -52,8 +52,17 @@ export type WCOrder = {
 
 // ================== Supabase clients ==================
 function publicClient() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+  return createClient(process.env.SUPABASE_URL!, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const h = new Headers(init?.headers);
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        h.set("apikey", key);
+        return fetch(input as RequestInfo, { ...init, headers: h });
+      },
+    },
   });
 }
 
@@ -333,8 +342,7 @@ export const createOrder = createServerFn({ method: "POST" })
       });
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: order, error: oErr } = await supabaseAdmin
+    const { data: order, error: oErr } = await sb
       .from("orders")
       .insert({
         customer_first_name: data.billing.first_name,
@@ -356,7 +364,7 @@ export const createOrder = createServerFn({ method: "POST" })
     if (oErr) throw new Error(oErr.message);
     const o = order as unknown as { id: string; order_number: string; total: number | string };
 
-    const { error: iErr } = await supabaseAdmin
+    const { error: iErr } = await sb
       .from("order_items")
       .insert(lines.map((l) => ({ order_id: o.id, ...l })));
     if (iErr) throw new Error(iErr.message);
