@@ -32,20 +32,22 @@ type WooReview = {
 };
 
 async function wooFetch(path: string): Promise<unknown> {
-  const storeUrl = process.env.WOO_STORE_URL;
-  const ck = process.env.WOO_CONSUMER_KEY;
-  const cs = process.env.WOO_CONSUMER_SECRET;
-  if (!storeUrl || !ck || !cs) {
-    throw new Error("Woo import needs WOO_STORE_URL / WOO_CONSUMER_KEY / WOO_CONSUMER_SECRET");
+  const lovableKey = process.env.LOVABLE_API_KEY;
+  const wooKey = process.env.WOOCOMMERCE_API_KEY;
+  if (!lovableKey || !wooKey) {
+    throw new Error("Woo import needs the WooCommerce connector to be linked to this project.");
   }
-  const base = storeUrl.replace(/\/+$/, "");
-  const auth = Buffer.from(`${ck}:${cs}`).toString("base64");
-  const res = await fetch(`${base}/wp-json/wc/v3${path}`, {
-    headers: { Authorization: `Basic ${auth}`, Accept: "application/json" },
+  const res = await fetch(`https://connector-gateway.lovable.dev/woocommerce${path}`, {
+    headers: {
+      Authorization: `Bearer ${lovableKey}`,
+      "X-Connection-Api-Key": wooKey,
+      Accept: "application/json",
+    },
   });
   if (!res.ok) throw new Error(`Woo ${res.status}: ${(await res.text()).slice(0, 200)}`);
   return res.json();
 }
+
 
 async function fetchAll<T>(path: string): Promise<T[]> {
   const out: T[] = [];
