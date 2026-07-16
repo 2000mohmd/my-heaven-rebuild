@@ -52,8 +52,17 @@ export type WCOrder = {
 
 // ================== Supabase clients ==================
 function publicClient() {
-  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+  return createClient(process.env.SUPABASE_URL!, key, {
     auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const h = new Headers(init?.headers);
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        h.set("apikey", key);
+        return fetch(input as RequestInfo, { ...init, headers: h });
+      },
+    },
   });
 }
 
