@@ -321,10 +321,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      place_checkout_order: {
-        Args: { _billing: Json; _line_items: Json }
-        Returns: Json
-      }
     }
     Enums: {
       app_role: "admin" | "user"
