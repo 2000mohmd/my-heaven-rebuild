@@ -275,9 +275,7 @@ const orderSchema = z.object({
 export const createOrder = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => orderSchema.parse(d))
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const sb = supabaseAdmin;
-
+    const sb = publicClient();
 
     // Fetch product prices server-side (never trust client prices)
     const ids = data.line_items.map((li) => li.product_id);
@@ -334,7 +332,7 @@ export const createOrder = createServerFn({ method: "POST" })
       const unit = ov ? ov.price : base.price;
       const available = ov ? ov.available && base.available : base.available;
       if (!available) throw new Error(`Product "${base.name}" is unavailable in ${data.billing.country}`);
-      const lineTotal = unit * li.quantity;
+      const lineTotal = Number((unit * li.quantity).toFixed(2));
       subtotal += lineTotal;
       lines.push({
         product_id: li.product_id,
@@ -344,10 +342,16 @@ export const createOrder = createServerFn({ method: "POST" })
         line_total: lineTotal,
       });
     }
+    subtotal = Number(subtotal.toFixed(2));
 
-    const { data: order, error: oErr } = await sb
+    const orderId = crypto.randomUUID();
+    const orderNumber = `HB-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+
+    const { error: oErr } = await sb
       .from("orders")
       .insert({
+        id: orderId,
+        order_number: orderNumber,
         customer_first_name: data.billing.first_name,
         customer_last_name: data.billing.last_name,
         email: data.billing.email,
@@ -361,15 +365,12 @@ export const createOrder = createServerFn({ method: "POST" })
         currency: "USD",
         payment_method: "cod",
         status: "pending",
-      })
-      .select("id, order_number, total")
-      .single();
+      });
     if (oErr) throw new Error(oErr.message);
-    const o = order as unknown as { id: string; order_number: string; total: number | string };
 
     const { error: iErr } = await sb
       .from("order_items")
-      .insert(lines.map((l) => ({ order_id: o.id, ...l })));
+      .insert(lines.map((l) => ({ order_id: orderId, ...l })));
     if (iErr) throw new Error(iErr.message);
 
     // Fire-and-forget WhatsApp notification via CallMeBot
@@ -381,12 +382,12 @@ export const createOrder = createServerFn({ method: "POST" })
           .map((l) => `• ${l.product_name} x${l.quantity} = ${l.line_total.toFixed(2)}`)
           .join("\n");
         const msg =
-          `🛍️ New Heaven Beauty order ${o.order_number}\n` +
+          `🛍️ New Heaven Beauty order ${orderNumber}\n` +
           `${data.billing.first_name} ${data.billing.last_name}\n` +
           `📞 ${data.billing.phone}\n` +
           `📍 ${data.billing.address_1}, ${data.billing.city}, ${data.billing.country.toUpperCase()}\n` +
           `${itemsText}\n` +
-          `Total: ${Number(o.total).toFixed(2)} USD (COD)`;
+          `Total: ${subtotal.toFixed(2)} USD (COD)`;
         const url =
           `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}` +
           `&text=${encodeURIComponent(msg)}&apikey=${encodeURIComponent(apiKey)}`;
@@ -396,7 +397,7 @@ export const createOrder = createServerFn({ method: "POST" })
       console.error("[whatsapp-notify]", e);
     }
 
-    return { id: Number.NaN, uuid: o.id, number: o.order_number, total: String(o.total) };
+    return { id: Number.NaN, uuid: orderId, number: orderNumber, total: String(subtotal) };
   });
 
 
