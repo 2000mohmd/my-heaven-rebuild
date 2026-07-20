@@ -372,8 +372,33 @@ export const createOrder = createServerFn({ method: "POST" })
       .insert(lines.map((l) => ({ order_id: o.id, ...l })));
     if (iErr) throw new Error(iErr.message);
 
+    // Fire-and-forget WhatsApp notification via CallMeBot
+    try {
+      const apiKey = process.env.CALLMEBOT_API_KEY;
+      const phone = process.env.CALLMEBOT_PHONE;
+      if (apiKey && phone) {
+        const itemsText = lines
+          .map((l) => `• ${l.product_name} x${l.quantity} = ${l.line_total.toFixed(2)}`)
+          .join("\n");
+        const msg =
+          `🛍️ New Heaven Beauty order ${o.order_number}\n` +
+          `${data.billing.first_name} ${data.billing.last_name}\n` +
+          `📞 ${data.billing.phone}\n` +
+          `📍 ${data.billing.address_1}, ${data.billing.city}, ${data.billing.country.toUpperCase()}\n` +
+          `${itemsText}\n` +
+          `Total: ${Number(o.total).toFixed(2)} USD (COD)`;
+        const url =
+          `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}` +
+          `&text=${encodeURIComponent(msg)}&apikey=${encodeURIComponent(apiKey)}`;
+        await fetch(url).catch((e) => console.error("[callmebot]", e));
+      }
+    } catch (e) {
+      console.error("[whatsapp-notify]", e);
+    }
+
     return { id: Number.NaN, uuid: o.id, number: o.order_number, total: String(o.total) };
   });
+
 
 // ================== Admin: list orders ==================
 export const listOrders = createServerFn({ method: "GET" })
