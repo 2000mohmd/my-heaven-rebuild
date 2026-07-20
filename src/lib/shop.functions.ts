@@ -235,8 +235,8 @@ const reviewSchema = z.object({
 export const createProductReview = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => reviewSchema.parse(d))
   .handler(async ({ data }) => {
-    const sb = publicClient();
-    const { error } = await sb.from("product_reviews").insert({
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("product_reviews").insert({
       product_id: data.product_id,
       reviewer: data.reviewer,
       reviewer_email: data.reviewer_email,
@@ -245,6 +245,7 @@ export const createProductReview = createServerFn({ method: "POST" })
       approved: false,
     });
     if (error) throw new Error(error.message);
+
     return {
       id: "pending",
       date_created: new Date().toISOString(),
