@@ -275,7 +275,9 @@ const orderSchema = z.object({
 export const createOrder = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => orderSchema.parse(d))
   .handler(async ({ data }) => {
-    const sb = publicClient();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const sb = supabaseAdmin;
+
 
     // Fetch product prices server-side (never trust client prices)
     const ids = data.line_items.map((li) => li.product_id);
