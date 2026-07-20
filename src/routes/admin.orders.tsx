@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { listOrders } from "@/lib/shop.functions";
+import { listOrders, updateOrderStatus, orderStatuses, type OrderStatus } from "@/lib/shop.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/orders")({
   component: OrdersPage,
@@ -9,9 +10,22 @@ export const Route = createFileRoute("/admin/orders")({
 
 function OrdersPage() {
   const fetchOrders = useServerFn(listOrders);
+  const updateStatus = useServerFn(updateOrderStatus);
+  const queryClient = useQueryClient();
+
   const { data: orders = [], isLoading, error } = useQuery({
     queryKey: ["admin", "orders"],
     queryFn: () => fetchOrders(),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (vars: { order_id: string; status: OrderStatus }) =>
+      updateStatus({ data: vars }),
+    onSuccess: (_, vars) => {
+      toast.success(`Status updated to ${vars.status}`);
+      queryClient.invalidateQueries({ queryKey: ["admin", "orders"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (
@@ -52,9 +66,21 @@ function OrdersPage() {
                     {o.line_items.map((li) => `${li.name} × ${li.quantity}`).join(", ")}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="inline-block rounded-full bg-blush/60 px-2 py-0.5 text-xs">
-                      {o.status}
-                    </span>
+                    <select
+                      className="rounded-full border border-border bg-background px-2 py-1 text-xs capitalize disabled:opacity-50"
+                      value={o.status}
+                      disabled={mutation.isPending}
+                      onChange={(e) =>
+                        mutation.mutate({
+                          order_id: o.id,
+                          status: e.target.value as OrderStatus,
+                        })
+                      }
+                    >
+                      {orderStatuses.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
                   </td>
                   <td className="px-4 py-3 text-right font-medium">
                     {o.currency} {o.total}
