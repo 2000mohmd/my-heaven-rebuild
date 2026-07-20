@@ -400,6 +400,35 @@ export const createOrder = createServerFn({ method: "POST" })
     return { id: Number.NaN, uuid: orderId, number: orderNumber, total: String(subtotal) };
   });
 
+// ================== Admin: update order status ==================
+const ORDER_STATUSES = ["pending", "processing", "shipped", "delivered", "cancelled", "refunded"] as const;
+const updateStatusSchema = z.object({
+  order_id: z.string().uuid(),
+  status: z.enum(ORDER_STATUSES),
+});
+export type OrderStatus = (typeof ORDER_STATUSES)[number];
+export const orderStatuses = ORDER_STATUSES;
+
+export const updateOrderStatus = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => updateStatusSchema.parse(d))
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin, error: roleError } = await context.supabase.rpc("has_role" as never, {
+      _user_id: context.userId,
+      _role: "admin",
+    } as never);
+    if (roleError) throw new Error(`Role check failed: ${roleError.message}`);
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("orders")
+      .update({ status: data.status })
+      .eq("id", data.order_id);
+    if (error) throw new Error(error.message);
+    return { ok: true, id: data.order_id, status: data.status };
+  });
+
 
 // ================== Admin: list orders ==================
 export const listOrders = createServerFn({ method: "GET" })
