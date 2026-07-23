@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CountryProvider } from "@/hooks/use-country";
 import { CountryPickerModal } from "@/components/country-picker-modal";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
 function NotFoundComponent() {
   return (
@@ -130,6 +131,7 @@ function RootComponent() {
       <CountryProvider>
         <Outlet />
         <CountryPickerModal />
+        <WhatsAppButton />
       </CountryProvider>
     </QueryClientProvider>
   );
