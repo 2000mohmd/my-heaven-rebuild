@@ -373,11 +373,16 @@ export const createOrder = createServerFn({ method: "POST" })
       .insert(lines.map((l) => ({ order_id: orderId, ...l })));
     if (iErr) throw new Error(iErr.message);
 
-    // Fire-and-forget WhatsApp notification via CallMeBot
+    // WhatsApp notification via CallMeBot
     try {
       const apiKey = process.env.CALLMEBOT_API_KEY;
-      const phone = process.env.CALLMEBOT_PHONE;
-      if (apiKey && phone) {
+      const rawPhone = process.env.CALLMEBOT_PHONE;
+      if (!apiKey || !rawPhone) {
+        console.error("[callmebot] missing CALLMEBOT_API_KEY or CALLMEBOT_PHONE");
+      } else {
+        // CallMeBot expects the phone with a leading + and no spaces
+        const phone = rawPhone.trim().replace(/[^\d+]/g, "");
+        const normalizedPhone = phone.startsWith("+") ? phone : `+${phone}`;
         const itemsText = lines
           .map((l) => `• ${l.product_name} x${l.quantity} = ${l.line_total.toFixed(2)}`)
           .join("\n");
@@ -389,9 +394,15 @@ export const createOrder = createServerFn({ method: "POST" })
           `${itemsText}\n` +
           `Total: ${subtotal.toFixed(2)} USD (COD)`;
         const url =
-          `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}` +
+          `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(normalizedPhone)}` +
           `&text=${encodeURIComponent(msg)}&apikey=${encodeURIComponent(apiKey)}`;
-        await fetch(url).catch((e) => console.error("[callmebot]", e));
+        const res = await fetch(url);
+        const body = await res.text().catch(() => "");
+        if (!res.ok) {
+          console.error("[callmebot] failed", res.status, body.slice(0, 300));
+        } else {
+          console.log("[callmebot] sent", res.status, body.slice(0, 200));
+        }
       }
     } catch (e) {
       console.error("[whatsapp-notify]", e);
