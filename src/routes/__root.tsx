@@ -131,6 +131,7 @@ function RootComponent() {
       <CountryProvider>
         <Outlet />
         <CountryPickerModal />
+        <WhatsAppButton />
       </CountryProvider>
     </QueryClientProvider>
   );
